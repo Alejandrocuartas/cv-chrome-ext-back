@@ -10,21 +10,22 @@ def response_ok(body: dict[str,str]):
             'Access-Control-Allow-Headers': '*',
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': '*',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
-        'body': body
+        'body': json.dumps(body),
     }
 
 
-def response_error(error: Exception):
+def response_error(error: Exception, message: str, code: int):
     """ return a 500 response """
 
     body = json.dumps({
-            'error': str(error)
-        })
+        'error': str(error),
+        'message': message,
+    })
 
     return {
-        'statusCode': 500,
+        'statusCode': code,
         'headers': {
             'Access-Control-Allow-Headers': '*',
             'Access-Control-Allow-Origin': '*',

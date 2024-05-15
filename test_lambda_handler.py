@@ -15,4 +15,5 @@ def test_lambda_handler_():
         }
 
     res = lambda_handler(event, {}) # type: ignore
+    print(res)
     assert res.get('statusCode') == 200

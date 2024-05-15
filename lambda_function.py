@@ -34,5 +34,14 @@ def lambda_handler(event: dict[str,str], context): # type: ignore
             "message": res
         })
 
-    except json.JSONDecodeError as e:
-        return responses.response_error(e)
+    except KeyError as e:
+        message = "My Error. Please reach out to me."
+        return responses.response_error(e, message, 502)
+
+    except TypeError as e:
+        message = "Bad Request. Please check the request body."
+        return responses.response_error(e, message, 400)
+
+    except Exception as e: # pylint: disable=broad-except
+        message = "Unexpected error. Please reach out to me."
+        return responses.response_error(e, message, 500)
