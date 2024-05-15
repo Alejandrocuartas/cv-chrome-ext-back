@@ -268,3 +268,12 @@ pyrightconfig.json
 
 .prompting
 .prompting.*
+prompting.*
+
+# zip files
+
+*.zip
+
+# deploy script
+
+*.sh

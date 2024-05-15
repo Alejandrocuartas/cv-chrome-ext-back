@@ -5,7 +5,7 @@ from dataclasses import dataclass, asdict
 @dataclass
 class GenerateCVRequest:
     """ Generate CV Request """
-    html: str
+    html_s3_key: str
 
 @dataclass
 class Experience:

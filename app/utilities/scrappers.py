@@ -1,22 +1,15 @@
 """ Helper functions for the application """
 
 import json
-from flask import Request
+# pylint: disable=import-error
 from bs4 import BeautifulSoup, Tag # type: ignore
-from .types.generate_cv import GenerateCVRequest, ParsedCvHTML, Experience
+from ..types.generate_cv import ParsedCvHTML, Experience
 
-def extract_data_from_request(request: Request):
+def extract_data_from_request(html: str):
     """ Extract data from a request. """
 
-    request_dict = request.get_json()
-
-    data = GenerateCVRequest(**request_dict)
-
-    parsed_data = parse_html_to_event_schema(data.html)
-    print(json.dumps(parsed_data.to_dict(), indent=4))
-
-    save_local_file(data.html, parsed_data.profile_name)
-    return request.get_json()
+    parsed_data = parse_html_to_event_schema(html)
+    return json.dumps(parsed_data.to_dict(), indent=4)
 
 def save_local_file(html: str, name: str):
     """ Save a local file. """
