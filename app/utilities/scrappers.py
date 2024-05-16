@@ -1,3 +1,6 @@
+# disable the line length check for this file
+# pylint: disable=C0301
+
 """ Helper functions for the application """
 
 import json
@@ -97,45 +100,16 @@ def parse_html_to_event_schema(html: str) -> ParsedCvHTML:
 
 def get_ul_of_experiences(soup: BeautifulSoup) -> Tag | None:
     """ Get the ul of experiences. from the HTML."""
-    ul_experiences = soup.find_all(
+    existing_uls = soup.find_all(
             'ul',
-            class_='BtfbvVmlfKAeHtqUpLjwfzizjYOXxWsmwGkng'
         )
 
-    valid_uls: list[Tag] = []
-    for ul in ul_experiences:
-        li_items = ul.find_all(
-            'li',
-            class_='artdeco-list__item tFNJGdgZPdGDcLtjPOQVjywuRIunMYsMs oPjOMAOSqFVcWFiuHPdqyHuAGuTEXZcFUQg'
-        )
-        is_valid = False
-        if len(li_items) > 0:
-            for li in li_items:
-                sub_soup = BeautifulSoup(str(li), 'html.parser')
-                element_in_li = sub_soup.find(
-                    'div',
-                    class_='VCbAJOyhaRwVphesKXELAJHtESiYyECkJo XaACUcxyNUBWWiWtTartGuquUQBxkkTrBsY EDzeFvuUObHTPtsPbjICqHJImfwFNArpZY',
-                    attrs={
-                        'data-view-name': 'profile-component-entity'
-                    }
-                )
-                if isinstance(element_in_li, Tag):
-                    experience_element = element_in_li.find(
-                        'a',
-                        attrs={
-                            'data-field': 'experience_company_logo'
-                        }
-                    )
-                    if experience_element is not None:
-                        is_valid = True
-                        break
-        if is_valid:
-            valid_uls.append(ul)
+    for ul in existing_uls:
+        a_experience = ul.find('a', attrs={'data-field': 'experience_company_logo'})
+        if isinstance(a_experience, Tag):
+            return ul
 
-    if len(valid_uls) == 0:
-        return None
-
-    return valid_uls[0]
+    return None
 
 def collect_experiences(soup: BeautifulSoup) -> list[Experience]:
     """ Collect experiences from HTML. """
@@ -197,17 +171,13 @@ def collect_experiences(soup: BeautifulSoup) -> list[Experience]:
         if isinstance(date_range_element, Tag):
             date_range = date_range_element.text.strip()
 
-        description_element = sub_soup.find(
-            'div',
-            class_='dOlsoPEBmaghjERSXAbqcOuRCiXrsEkEnE inline-show-more-text--is-collapsed inline-show-more-text--is-collapsed-with-line-clamp full-width'
+        texts_elements = sub_soup.find_all(
+            'span',
+            class_ = 'visually-hidden',
         )
-        if isinstance(description_element, Tag):
-            description_span = description_element.find(
-                'span',
-                class_='visually-hidden'
-            )
-            if isinstance(description_span, Tag):
-                description = description_span.text.strip()
+
+        if len(texts_elements) > 0:
+            description = texts_elements[-1].text.strip()
 
         experiences.append(
             Experience(

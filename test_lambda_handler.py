@@ -9,7 +9,7 @@ def test_lambda_handler_():
     event = {
             "body": json.dumps(
                 {
-                    "html_s3_key": "Juan_Manuel_Aizama.html",
+                    "html_s3_key": "1087653.html",
                 }
             )
         }
