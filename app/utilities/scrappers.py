@@ -39,35 +39,19 @@ def parse_html_to_event_schema(html: str) -> ParsedCvHTML:
         heading = heading_element.text.strip()
 
     resume = ''
-    resume_section_parent = soup.find_all(
-        'section',
-        class_='artdeco-card pv-profile-card break-words mt2'
+    resume_section_parent = soup.find(
+        'div',
+        class_='display-flex ph5 pv3'
     )
-    if len(resume_section_parent) > 0:
-        for div in resume_section_parent:
-            sub_soup = BeautifulSoup(str(div), 'html.parser')
-            child1 = sub_soup.find(
-                'div',
-                class_='display-flex ph5 pv3'
-            )
-            if isinstance(child1, Tag):
-                child2 = child1.find(
-                    'div',
-                    class_='YEUQjCRdAayyPJoelGmaEfzUvJrSHPnLKjUnQ'
-                )
-                if isinstance(child2, Tag):
-                    child3 = child2.find(
-                        'div',
-                        class_='dOlsoPEBmaghjERSXAbqcOuRCiXrsEkEnE'
-                    )
-                    if isinstance(child3, Tag):
-                        resume_span = child3.find(
-                            'span',
-                            class_='visually-hidden'
-                        )
-                        if isinstance(resume_span, Tag):
-                            resume = resume_span.text.strip()
-                            break
+
+    if isinstance(resume_section_parent, Tag):
+        resume_section = resume_section_parent.find(
+            'span',
+            class_='visually-hidden'
+        )
+
+        if isinstance(resume_section, Tag):
+            resume = resume_section.text.strip()
 
     profile_photo: str = ''
     logged_user_profile_photo_element = soup.find(
@@ -79,7 +63,8 @@ def parse_html_to_event_schema(html: str) -> ParsedCvHTML:
             profile_photo = src
     else:
         profile_photo_element = soup.find(
-            class_='ViJVhuHdFudvBxfKtzmkJMYDOrGxA pv-top-card-profile-picture__image--show evi-image ember-view'
+            'img',
+            class_='pv-top-card-profile-picture__image--show'
         )
         if isinstance(profile_photo_element, Tag):
             src = profile_photo_element.get('src')
