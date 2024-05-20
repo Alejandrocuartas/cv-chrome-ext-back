@@ -6,6 +6,9 @@ from dataclasses import dataclass, asdict
 class GenerateCVRequest:
     """ Generate CV Request """
     html_s3_key: str
+    email_to: str
+    profile_url: str
+
 
 @dataclass
 class Experience:
@@ -28,6 +31,8 @@ class ParsedCvHTML:
     resume: str
     profile_photo: str
     experiences: list[Experience]
+    email_to: str
+    profile_url: str
 
     def to_dict(self):
         """ Convert to dictionary """

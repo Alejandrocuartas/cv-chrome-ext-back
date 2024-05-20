@@ -8,10 +8,12 @@ import json
 from bs4 import BeautifulSoup, Tag # type: ignore
 from ..types.generate_cv import ParsedCvHTML, Experience
 
-def extract_data_from_request(html: str):
+def extract_data_from_request(html: str, email_to: str, profile_url: str):
     """ Extract data from a request. """
 
     parsed_data = parse_html_to_event_schema(html)
+    parsed_data.email_to = email_to
+    parsed_data.profile_url = profile_url
     return json.dumps(parsed_data.to_dict(), indent=4)
 
 def save_local_file(html: str, name: str):
@@ -78,7 +80,9 @@ def parse_html_to_event_schema(html: str) -> ParsedCvHTML:
         heading=heading,
         resume=resume,
         experiences=experiences,
-        profile_photo=profile_photo
+        profile_photo=profile_photo,
+        email_to='',
+        profile_url='',
     )
 
     return parsed_html

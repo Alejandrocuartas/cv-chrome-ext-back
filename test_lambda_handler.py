@@ -9,8 +9,10 @@ def test_lambda_handler_():
     event = {
             "body": json.dumps(
                 {
-                    # "html_s3_key": "1087653.html",
-                    "html_s3_key": "4467640.html",
+                    "html_s3_key": "1087653.html",
+                    "profile_url": "https://www.linkedin.com/in/cuartas/",
+                    "email_to": "cuartasmarin734@gmail.com",
+                    # "html_s3_key": "4467640.html",
                 }
             )
         }

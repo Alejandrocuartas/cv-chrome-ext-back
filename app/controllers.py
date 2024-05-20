@@ -2,6 +2,7 @@
 
 import boto3 # type: ignore
 from .utilities import scrappers
+from .utilities import sqs
 from .types.generate_cv import GenerateCVRequest
 
 s3 = boto3.client('s3') # type: ignore
@@ -22,8 +23,10 @@ def controller(request: GenerateCVRequest):
         print(msg)
         raise RuntimeError(msg) from e
 
-    profile_json = scrappers.extract_data_from_request(object_content) # type: ignore
+    profile_json = scrappers.extract_data_from_request(object_content, request.email_to, request.profile_url) # type: ignore
 
     print(profile_json)
+
+    sqs.generate_pdf(profile_json)
 
     return 'success'
